@@ -1,18 +1,7 @@
 <template>
-<!-- 	<div class="col-md-10" id="bodycontent">
-		<h1>{{getData}}</h1>
-		<div class="row">
-		  <div class="col-sm-6 col-md-4" v-for="roominfo in roominfos">
-		    <div class="thumbnail">
-		      <img :src="roominfo.img">
-		      <div class="caption">
-		        <p></p>
-		        <p><a href="#" class="btn btn-primary" role="button" :text="roominfo.anchor"></a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-	</div> -->
+	<div class="container-fluid" id="mapcontainer" @load="loadMap">
+		<button @click="loadMap">clickme</button>
+	</div>
 </template>
 
 <script>
@@ -24,20 +13,38 @@
 	    	roominfos:[]
 	    }
 	  },
-	  computed: {
-	  	getData: function (){
-  			this.$http.get('http://localhost:5000/apis/douyu/roominfos').then(function(response){
-  				// 响应成功回调
-  				console.log(response.body)
-  				return this.roominfos = response.body.roominfos
-  			});
-  		}
+	  methods: {
+	  	loadMap:function(){
+	  		console.log("loading map")
+	  		leafletMap()
+	  	},
 	  }
 	}
+
+	function leafletMap(){
+		var map = L.map('mapcontainer').setView([51.505, -0.09], 13);
+
+		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+
+		L.marker([51.5, -0.09]).addTo(map)
+		    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+		    .openPopup();
+	}
+
+	
 </script>
 
 <style>
-	#bodycontent {
-		  background: #F7F6F2;
+	#mapcontainer {
+		padding: 0px;
+		margin-left: 70px;
+		height: 100%;
+		width: 100%;
+		min-height: 670px;
+		background-color: black;
+		position: absolute;
+		z-index: 1;
 	}
 </style>
