@@ -8,7 +8,7 @@
 from requests import Session
 from pymongo import MongoClient
 from json import loads
-from datetime import datetime
+from datetime import datetime,date,time
 from time import localtime, strftime
 from multiprocessing import Pool
 
@@ -83,11 +83,14 @@ def get_typhoon_info(typhoonid):
 	    typhoon_data['typhoonid'] = typhoon_info[0]
 	    typhoon_data['subid'] = item[0]
 	    typhoon_data['pasttime'] = item[1]
-	    # typhoon_data['pasttimestr'] = unix_to_local(item[2])
+	    date_formate = convert_timeformat(item[1])
+	    typhoon_data['pasttimeiso'] = date_formate[0] if date_formate else None
+	    typhoon_data['pasttimestr'] = date_formate[1] if date_formate else None
+
 	    typhoon_data['movedir'] = parse_direction(item[8])
 	    typhoon_data['position'] = {
 	        'type': "Point",
-	        'coordinates': [item[4], item[5]]
+	        'coordinates': [item[4] if item[4]<180 else item[4]-360 , item[5]]
 	    }
 	    typhoon_data[
 	        'positionstr'] = '{}N/{}E'.format(item[5], item[4])
@@ -108,23 +111,29 @@ def get_typhoon_info(typhoonid):
 
 
 
-def unix_to_local(unixstamp):
+def convert_timeformat(timestr):
 	'''
-	将unix时间转为当地时间
+	将字符串形式时间转为当地时间
 	'''
-	try:
-		timeStamp = unixstamp
-		timeArray = localtime(timeStamp)
-		otherStyleTime = strftime("%m-%d %H:%M", timeArray)
-		return otherStyleTime
-	except Exception as e:
-		print(str(e))
+	if timestr:
+		year = int(''.join(timestr[0:4]))
+		month = int(''.join(timestr[4:6]))
+		day = int(''.join(timestr[6:8]))
+
+		hour = int(''.join(timestr[8:10]))
+		minute = int(''.join(timestr[10:12])) if len(timestr)>10 else 0
+
+		d = date(year,month,day)
+		t = time(hour,minute)
+
+		date_formate = datetime.combine(d,t)
+		return date_formate,date_formate.strftime("%m-%d %H:%M")
+	else:
 		return None
 
 
 def parse_class(typhoonclass):
 	if typhoonclass not in typhoon_dict.keys():
-		print(typhoonclass)
 		return typhoonclass
 	return typhoon_dict[typhoonclass]
 	
@@ -137,12 +146,11 @@ def parse_direction(dirstr):
 	if dirstr == 'no':
 		return None
 	direction = []
-	print(dirstr)
 	for s in dirstr:
 		try:
 			direction.append(direction_dict.setdefault(s,''))
 		except Exception as e:
-			print(str(e))	    
+			pass	    
 	return ''.join(direction)
 
 def parse_phrasedata(data):
@@ -199,7 +207,7 @@ def initClass():
 
 if __name__ == '__main__':
 	year_info = col.find({},{'typhoonid':1,'_id':0})
-	ids = []
 	for typhoonid in year_info:
 		# ids.append(typhoonid['typhoonid'])
 		get_typhoon_info(typhoonid['typhoonid'])
+		
