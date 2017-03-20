@@ -30,6 +30,9 @@
 	    	doshow:"doshow"
 	    }
 	  },
+	  methods: {
+
+	  },
 	}
 </script>
 

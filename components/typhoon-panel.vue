@@ -1,16 +1,11 @@
 <template>
 	<div id="typhoonpanel" v-bind:class="panelshow ? doshow : notshow">
     <div class="panel panel-default" id="year-panel">
-      <div class="panel-heading">台风列表
+      <div class="panel-heading">{{typhoons}}
         <div class="btn-group" id="year-btn">
-          <button id="selector-btn" class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            2016 <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" id="year-list">
-            <li v-for="year in yearlist">
-              {{2017-year}}
-            </li>
-          </ul>
+          <select id="year-list"> 
+           <option v-for="year in yearlist">{{year}}</option> 
+         </select>
         </div>
         <span id="panel-closer">x</span>
       </div>
@@ -20,7 +15,7 @@
               <div class="checkbox">
                 <label>
                   <input type="checkbox" value="">
-                  {{2017-year}}
+                  {{year}}
                 </label>
               </div>
             </li>
@@ -43,9 +38,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="info" v-for="year in yearlist">
-                    <th scope="row">{{year}}</th>
-                    <td>{{year+1}}</td>
+                  <tr class="info" v-for="typhoon in typhoon_by_year">
+                    <th scope="row">{{typhoon}}</th>
+                    <td>{{typhoon+1}}</td>
                     <td>风向</td>
                     <td>风俗</td>
                     <td>强度</td>
@@ -66,7 +61,34 @@ export default {
     return {
       yearlist:[1,2,3,4,5,6,7,8],
       notshow:"notshow",
-      doshow:"doshow"
+      doshow:"doshow",
+      typhoon_by_year:[],
+    }
+  },
+  methods: {
+    gettyphoons : function(){
+      this.$http.get('http://localhost:44444/apis/typhoon/1949').then(response => {
+
+          // get body data
+          console.log(response.body)
+
+        }, response => {
+          // error callback
+        });
+    }
+  },
+  computed: {
+    typhoons : function() {
+      // body...
+      this.$http.get('http://localhost:44444/apis/typhooninfo/years').then(response => {
+
+          // get body data
+          this.yearlist = response.body['years']
+
+        }, response => {
+          // error callback
+        });
+      return '台风信息'
     }
   }
 }
