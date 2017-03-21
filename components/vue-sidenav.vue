@@ -61,7 +61,7 @@ export default {
     background-color: #323232;
     height: 100%;
     width: 70px;
-    min-height: 600px;
+    min-height: 100px;
     position: absolute;
     left: 0;
     z-index: 8;
