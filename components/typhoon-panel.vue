@@ -94,6 +94,7 @@ export default {
       this.$http.get(current_id).then(id_response=>{
         this.typhooninfos = id_response.body['typhooninfo']
         console.log(this.typhooninfos)
+        this.$emit('get_info_by_id',typhoon_id)
       })
     },
     selectYear: function(selected_year){

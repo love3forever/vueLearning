@@ -7,7 +7,7 @@
 
 from flask.blueprints import Blueprint
 from flask_restful import Resource, Api
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING, DESCENDING
 from flask import jsonify, make_response
 
 typhoon_list = Blueprint('typhoon', __name__)
@@ -67,6 +67,26 @@ class Typhoon_years(Resource):
         return response
 
 
+class Typhoon_loc(Resource):
+    """docstring for Typhoon_loc"""
+
+    def __init__(self):
+        self._mongoCli = MongoClient(host='localhost', port=27017)
+        self._db = self._mongoCli['nmc']
+        self._col = self._db['typhooninfo']
+
+    def get(self, selectedid):
+        print(selectedid)
+        results = self._col.find({"typhoonid": int(selectedid)}, {"position.coordinates": 1, "_id": 0}).sort(
+            [('pasttimeiso', ASCENDING)])
+        response = make_response(jsonify({'positions': list(results)}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST'
+        response.headers[
+            'Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+        return response
+
+
 typhoon_api.add_resource(Typhoon, "/apis/typhoon/<int:year>",
                          endpoint='typhoonlist')
 
@@ -75,3 +95,6 @@ typhoon_api.add_resource(Typhoon_info, "/apis/typhooninfo/<int:id>",
 
 typhoon_api.add_resource(Typhoon_years, "/apis/typhooninfo/years",
                          endpoint='typhoonyears')
+
+typhoon_api.add_resource(
+    Typhoon_loc, "/apis/typhoonloc/<string:selectedid>", endpoint='typhoonlocs')

@@ -6,12 +6,39 @@
 <script>
 	export default {
 	  name: 'vuecontentbody',
-
 	  data () {
 	    return {
+	    	leaflet:'',
+	    	typhoonid:this.selectedTyphoon
 	    }
 	  },
+	  props:['selectedTyphoon'],
 	  methods: {
+	  	get_typhoon_info:function(typhoon_id){
+	  		var pos_url = "http://localhost:44444/apis/typhoonloc/"+typhoon_id
+	  		var pos_info = []
+	  		this.$http.get(pos_url).then(year_response=>{
+	  		  pos_info = year_response.body['positions']
+	  		  console.log(pos_info)
+	  		  var latlngs = [];
+	  		  for (var i = 0; i < pos_info.length; i++) {	  		  	
+	  		  	let cors = pos_info[i].position.coordinates
+	  		  	let position = [cors[1],cors[0]]
+	  		  	latlngs.push(position)
+	  		  }
+	  		  var polyline = L.polyline(latlngs, {color: 'red'}).addTo(this.leaflet);
+	  		  // zoom the map to the polyline
+	  		  this.leaflet.fitBounds(polyline.getBounds());
+	  		})
+	  	}
+	  },
+	  watch: {
+	  	selectedTyphoon: function(o,n){
+	  		console.log("selectedid " +n)
+	  		if (n) {
+	  			this.get_typhoon_info(n)
+	  		}
+	  	}
 	  },
 	  computed: {
 	  	loadingMap: function(){
@@ -20,15 +47,13 @@
 	  	}
 	  },
 	  mounted: function leafletMap(){
-		var map = L.map('map').setView([51.505, -0.09], 13);
-
+		var map = L.map('map').setView([24, 133], 5)
+		this.leaflet = map
 		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 		    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		}).addTo(map);
+		}).addTo(map)
 
-		L.marker([51.5, -0.09]).addTo(map)
-		    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-		    .openPopup();
+		L.marker([24, 133]).addTo(map)
 	  }
 	}
 

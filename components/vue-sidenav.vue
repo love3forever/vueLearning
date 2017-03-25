@@ -4,7 +4,7 @@
       <ul class="nav nav-pills nav-stacked">
         <li role="presentation">
           <span class="typhoon" v-bind:class="istyphoonselected ? selected : ''" aria-hidden="true" @click="typhoonshow"></span>
-          <typhoonpanel :panelshow="ispanelshow"></typhoonpanel>
+          <typhoonpanel @get_info_by_id="writeId" :panelshow="ispanelshow"></typhoonpanel>
         </li>
         <li role="presentation">
           <span class="haiqu" v-bind:class="isdisasterselected ? selected : ''" aria-hidden="true" @click="diastershow"></span>
@@ -31,7 +31,7 @@ export default {
       istyphoonselected:false,
       isdisasterbox:false,
       isdisasterselected:false,
-      selected:"selected"
+      selected:"selected",
     }
   },
   components: {
@@ -49,7 +49,11 @@ export default {
       this.isdisasterselected = !this.isdisasterselected
       this.ispanelshow = false
       this.istyphoonselected = false
-    }
+    },
+    writeId: function(selected_id){
+      console.log("typhoon selected" + selected_id)
+      this.$emit('writeId',selected_id)
+    },
   }
 }
 </script>

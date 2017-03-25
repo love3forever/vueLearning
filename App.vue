@@ -5,8 +5,8 @@
         <vuenavbar></vuenavbar>
       </div>
       <div class="row">
-        <vuesidenav></vuesidenav>
-        <vuecontentbody></vuecontentbody>
+        <vuesidenav @writeId="add_typhoonid"></vuesidenav>
+        <vuecontentbody :selectedTyphoon="typhoonid"></vuecontentbody>
       </div>
     </div>
   </div>
@@ -26,11 +26,14 @@ export default {
   props:['vue'],
   data () {
     return {
+      typhoonid:'',
     }
   },
   methods: {
-    mounted: function(){
-      alert('app mounted')
+    add_typhoonid: function(typhoon_id){
+
+      this.typhoonid = typhoon_id
+      console.log("App get " +this.typhoonid)
     }
   }
 }
