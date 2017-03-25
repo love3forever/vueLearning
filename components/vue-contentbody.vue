@@ -22,13 +22,12 @@
 	  		  console.log(pos_info)
 	  		  var latlngs = [];
 	  		  for (var i = 0; i < pos_info.length; i++) {	  		  	
-	  		  	let cors = pos_info[i].position.coordinates
-	  		  	let position = [cors[1],cors[0]]
-	  		  	latlngs.push(position)
+	  		  	let cors1 = pos_info[i].position.coordinates	  		
+	  		  	let position1 = [cors1[1],cors1[0]]
+	  		  	latlngs.push(position1)
+	  		  	L.circleMarker(position1, {className:'leaflet-clickable',radius:4 ,fillRule:'evenodd',color: '#FDB700',stroke:true,weight:1,lineCap:"round",lineJoin:"round",fill:'#FDB700',fillOpacity:1}).addTo(this.leaflet);
 	  		  }
-	  		  var polyline = L.polyline(latlngs, {color: 'red'}).addTo(this.leaflet);
-	  		  // zoom the map to the polyline
-	  		  this.leaflet.fitBounds(polyline.getBounds());
+	  		  L.polyline(latlngs, {color: 'red',stroke:true,weight:2}).addTo(this.leaflet);
 	  		})
 	  	}
 	  },
