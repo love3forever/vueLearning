@@ -14,7 +14,7 @@
             <li v-for="typhoon in typhoon_by_year">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" value="" @click="selectYear(typhoon.typhoonid)">
+                  <input type="checkbox" :value="typhoon.typhoonid" v-model="selectedids">
                   {{typhoon.seqnum}} {{typhoon.cnname}} {{typhoon.enname}}
                 </label>
               </div>
@@ -27,28 +27,25 @@
           路径信息
         </div>
         <div class="panel-body" id="info-panel-body">
-      
-                <div id="table-title">
-                  <span class="s1">时间</span>
-                  <span class="s2">风速</span>
-                  <span class="s3">风向</span>
-                  <span class="s4">强度</span>
-                </div>
-                </thead>
-                <div id="body-container">
-                  <table id="info-table">
-                    <tbody  id="info-body">
-                      <tr class="info" v-for="info in typhooninfos">
-                        <td class="t1">{{info.pasttimestr}}</td>
-                        <td class="t2">{{info.movedir}}</td>
-                        <td class="t3">{{info.topspeed}}</td>
-                        <td class="t4">{{info.class}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                
-       
+          <div id="table-title">
+            <span class="s1">时间</span>
+            <span class="s2">风速</span>
+            <span class="s3">风向</span>
+            <span class="s4">强度</span>
+          </div>
+          </thead>
+          <div id="body-container">
+            <table id="info-table">
+              <tbody  id="info-body">
+                <tr class="info" v-for="info in typhooninfos">
+                  <td class="t1">{{info.pasttimestr}}</td>
+                  <td class="t2">{{info.movedir}}</td>
+                  <td class="t3">{{info.topspeed}}</td>
+                  <td class="t4">{{info.class}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>  
         </div>
     </div>
 	</div>
@@ -66,13 +63,12 @@ export default {
       doshow:"doshow",
       typhoon_by_year:[],
       typhooninfos:[],
+      selectedids:[],
     }
   },
   methods: {
     gettyphoons: function(){
       this.$http.get('http://localhost:44444/apis/typhoon/1949').then(response => {
-
-        // get body data
         console.log(response.body)
         this.$http.get('')
       });
@@ -93,8 +89,8 @@ export default {
       var current_id = 'http://localhost:44444/apis/typhooninfo/'+typhoon_id
       this.$http.get(current_id).then(id_response=>{
         this.typhooninfos = id_response.body['typhooninfo']
-        console.log(this.typhooninfos)
-        this.$emit('get_info_by_id',typhoon_id)
+        // console.log(this.typhooninfos)
+        this.$emit('get_info_by_id',this.selectedids)     
       })
     },
     selectYear: function(selected_year){
@@ -111,6 +107,22 @@ export default {
           this.get_typhoon_by_year(this.yearlist[0])
         });
       return '台风信息'
+    }
+  },
+  watch: {
+    selectedids: function(o,n){
+      // console.log(n)
+      // console.log(this.selectedids)
+      let ids = this.selectedids.length
+      // console.log(ids)
+      if (ids!=0) {
+        this.get_info_by_id(this.selectedids[ids-1])
+      }
+      else {
+        // console.log('nothing')
+        this.typhooninfos = []
+        this.$emit('get_info_by_id',this.selectedids)
+      }
     }
   }
 }

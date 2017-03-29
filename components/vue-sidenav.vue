@@ -50,9 +50,9 @@ export default {
       this.ispanelshow = false
       this.istyphoonselected = false
     },
-    writeId: function(selected_id){
-      console.log("typhoon selected" + selected_id)
-      this.$emit('writeId',selected_id)
+    writeId: function(selected_ids){
+      console.log("typhoon selected" + selected_ids)
+      this.$emit('writeId',selected_ids)
     },
   }
 }
