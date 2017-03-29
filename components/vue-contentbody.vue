@@ -15,13 +15,6 @@
 	  },
 	  props:['selectedTyphoon'],
 	  methods: {
-	  	get_typhoon_info:function(typhoon_id){
-	  		if (typhoon_id.length!=0) {
-	  			for (var i = 0; i < typhoon_id.length; i++) {	  				
-	  				
-	  			}
-	  		}	  		
-	  	},
 	  	addLayer:function(typhoon_id,target_layers){
 	  		var pos_url = "http://localhost:44444/apis/typhoonloc/"+typhoon_id
 	  		typhoon_id = typhoon_id.toString()
@@ -82,7 +75,6 @@
 	  		for (var i = 0; i < remove_list.length; i++) {
 	  			this.removeLayer(remove_list[i],this.typhoonsLayers)
 	  		}
-	  		// this.get_typhoon_info(this.selectedTyphoon)
 	  	}
 	  },
 	  computed: {
@@ -101,10 +93,6 @@
 		}).addTo(map)
 	  }
 	}
-
-	
-
-	
 </script>
 
 <style>
