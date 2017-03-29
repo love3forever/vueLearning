@@ -30,10 +30,9 @@ export default {
     }
   },
   methods: {
-    add_typhoonid: function(typhoon_id){
-
-      this.typhoonid = typhoon_id
-      console.log("App get " +this.typhoonid)
+    add_typhoonid: function(typhoon_ids){
+      this.typhoonid = typhoon_ids
+      // console.log("App get " +this.typhoonid)
     }
   }
 }
