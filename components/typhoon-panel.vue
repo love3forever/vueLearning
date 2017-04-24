@@ -164,14 +164,17 @@ export default {
     padding-top: 18px;
   }
 
-  .typhoon_list {
+  .panel-body {
     overflow: hidden;
+  }
+
+  .typhoon_list {
     width: auto;
-    height: 274px;
+    height: 100%;
     padding: 0px;
     text-align: left;
-    max-height: 270px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .typhoon_list > li {

@@ -9,6 +9,7 @@ from flask.blueprints import Blueprint
 from flask_restful import Resource, Api
 from pymongo import MongoClient, ASCENDING, DESCENDING
 from flask import jsonify, make_response
+import time
 
 typhoon_list = Blueprint('typhoon', __name__)
 typhoon_api = Api(typhoon_list)
@@ -27,6 +28,7 @@ class Typhoon(Resource):
         response.headers['Access-Control-Allow-Methods'] = 'POST'
         response.headers[
             'Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+        response.headers['Content-Type'] = 'application/json;charset=UTF-8'
         return response
 
 
@@ -45,6 +47,7 @@ class Typhoon_info(Resource):
         response.headers['Access-Control-Allow-Methods'] = 'POST'
         response.headers[
             'Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+        response.headers['Content-Type'] = 'application/json;charset=UTF-8'
         return response
 
 
@@ -57,13 +60,21 @@ class Typhoon_years(Resource):
         self._col = self._db['typhoon']
 
     def get(self):
+        start = time.clock()
         results = self._col.distinct('year')
+        print("distinct used time {}".format(str(time.clock() - start)))
+        start = time.clock()
         results = sorted(results, reverse=True)
+        print("sort used time {}".format(str(time.clock() - start)))
+        start = time.clock()
         response = make_response(jsonify({'years': list(results)}))
+
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'POST'
         response.headers[
             'Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+        response.headers['Content-Type'] = 'application/json;charset=UTF-8'
+        print("convert years used time {}".format(str(time.clock() - start)))
         return response
 
 
@@ -84,6 +95,7 @@ class Typhoon_loc(Resource):
         response.headers['Access-Control-Allow-Methods'] = 'POST'
         response.headers[
             'Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+        response.headers['Content-Type'] = 'application/json;charset=UTF-8'
         return response
 
 

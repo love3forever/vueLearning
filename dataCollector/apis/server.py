@@ -13,4 +13,4 @@ app.register_blueprint(typhoon_list)
 
 
 if __name__ == '__main__':
-    app.run(debug=True,port=44444)
+    app.run(host='0.0.0.0',debug=True,port=44444)

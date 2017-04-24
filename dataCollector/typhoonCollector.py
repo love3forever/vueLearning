@@ -207,6 +207,8 @@ def initClass():
 
 
 if __name__ == '__main__':
+    for x in xrange(1949, 2017):
+        get_typhoon_data(x)
     year_info = col.find({}, {'typhoonid': 1, '_id': 0})
     for typhoonid in year_info:
         # ids.append(typhoonid['typhoonid'])
