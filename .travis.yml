@@ -3,5 +3,3 @@ python:
   - "2.7"
 # command to install dependencies
 install: "pip install -r dataCollector/requirement.txt"
-# command to run tests
-script: pytest
